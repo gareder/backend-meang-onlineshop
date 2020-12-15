@@ -1,0 +1,81 @@
+
+# Array Type Definitions
+
+type Query {
+  # List of registered users in the DB (Clients/Admins)
+  users: ResultUsers
+  # Login
+  login(email: String!, password: String!): ResultLogin
+  # Token auth
+  me: ResultUser
+}
+
+type Mutation {
+  register(user: UserInput!): ResultUser
+}
+
+# Interface to specify the required properties in the response
+interface Result {
+  status: Boolean!
+  message: String!
+}
+
+type ResultUsers implements Result {
+  status: Boolean!
+  message: String!
+  # UserS information
+  users: [User!]!
+}
+
+type ResultUser implements Result {
+  status: Boolean!
+  message: String!
+  # User information
+  user: User
+}
+
+type ResultLogin implements Result {
+  status: Boolean!
+  message: String!
+  # Token information of the logged in user
+  token: String
+}
+
+"""
+User detailed information
+* email = client user in the DB
+* birthday & registerDate = ISO format
+"""
+type User {
+  # Unique ID
+  id: ID!
+  name: String!
+  lastname: String!
+  email: String!
+  password: String!
+  # Register date in the DB
+  registerDate: String!
+  # Only for >= 18 years old
+  birthday: String!
+  # Role Client/Admin
+  role: Role!
+}
+
+# Input to add the user information on the register
+input UserInput {
+  # Unique ID not required
+  id: ID
+  name: String!
+  lastname: String!
+  email: String!
+  password: String!
+  # Only for >= 18 years old
+  birthday: String!
+  # Role Client/Admin
+  role: Role = CLIENT
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
