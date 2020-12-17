@@ -1,0 +1,5 @@
+# Interface to specify the required properties in the response
+interface Result {
+  status: Boolean!
+  message: String!
+}

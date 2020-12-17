@@ -1,0 +1,19 @@
+"""
+User detailed information
+* email = client user in the DB
+* birthday & registerDate = ISO format
+"""
+type User {
+  # Unique ID
+  id: ID!
+  name: String!
+  lastname: String!
+  email: String!
+  password: String!
+  # Register date in the DB
+  registerDate: String!
+  # Only for >= 18 years old
+  birthday: String!
+  # Role Client/Admin
+  role: Role!
+}

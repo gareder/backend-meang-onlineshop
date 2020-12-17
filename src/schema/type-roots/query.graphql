@@ -1,0 +1,11 @@
+# Array Type Definitions
+type Query {
+  # List of registered users in the DB (Clients/Admins)
+  users: ResultUsers
+  # Login
+  login(email: String!, password: String!): ResultLogin
+  # Token auth
+  me: ResultUser
+  # Show products list
+  products: Boolean
+}

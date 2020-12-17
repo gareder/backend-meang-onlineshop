@@ -1,12 +1,13 @@
 import { IResolvers } from 'graphql-tools';
-import { COLLECTIONS } from '../config/constants';
+import { COLLECTIONS } from '../../config/constants';
 import bcrypt from 'bcrypt';
+import { assignDocumentId, findOneElement, insertOneElement } from '../../lib/db-operations';
 
-const resolversMutation: IResolvers = {
+const resolversUserMutation: IResolvers = {
   Mutation: {
     async register(_, { user }, { db }) {
       // Check if the user doesn't exists
-      const userCheck = await db.collection(COLLECTIONS.USERS).findOne({ email: user.email });
+      const userCheck = await findOneElement(db, COLLECTIONS.USERS, { email: user.email });
       if (userCheck !== null) {
         return {
           status: false,
@@ -15,18 +16,13 @@ const resolversMutation: IResolvers = {
         };
       }
       // Check the last register user to assign the ID
-      const lastUser = await db.collection(COLLECTIONS.USERS).find().limit(1).sort({ registerDate: -1 }).toArray();
-      if (lastUser.length === 0) {
-        user.id = 1;
-      } else {
-        user.id = lastUser[0].id + 1;
-      }
+      user.id = await assignDocumentId(db, COLLECTIONS.USERS, { registerDate: -1 });
       // Assign the ISO format date on the registerDate field
       user.registerDate = new Date().toISOString();
       // Password crypting
       user.password = bcrypt.hashSync(user.password, 10);
       // Save the document (register) in the collection
-      return await db.collection(COLLECTIONS.USERS).insertOne(user).then(
+      return await insertOneElement(db, COLLECTIONS.USERS, user).then(
         async () => {
           return {
             status: true,
@@ -47,4 +43,4 @@ const resolversMutation: IResolvers = {
   }
 };
 
-export default resolversMutation;
+export default resolversUserMutation;

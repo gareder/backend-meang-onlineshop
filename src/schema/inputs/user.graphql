@@ -1,0 +1,13 @@
+# Input to add the user information on the register
+input UserInput {
+  # Unique ID not required
+  id: ID
+  name: String!
+  lastname: String!
+  email: String!
+  password: String!
+  # Only for >= 18 years old
+  birthday: String!
+  # Role Client/Admin
+  role: Role = CLIENT
+}
