@@ -3,4 +3,6 @@ type ResultLogin implements Result {
   message: String!
   # Token information of the logged in user
   token: String
+  # User information
+  user: User
 }

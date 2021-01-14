@@ -1,0 +1,6 @@
+# Basic item to define the basic properties of the Rawg API
+interface Item {
+  id: ID!
+  name: String!
+  slug: String!
+}

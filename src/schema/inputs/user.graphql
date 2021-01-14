@@ -5,7 +5,7 @@ input UserInput {
   name: String!
   lastname: String!
   email: String!
-  password: String!
+  password: String
   # Only for >= 18 years old
   birthday: String!
   # Role Client/Admin
