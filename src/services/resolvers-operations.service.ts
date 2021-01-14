@@ -2,6 +2,7 @@ import { findElement, findOneElement, insertOneElement, assignDocumentId, update
 import { IContextData } from '../interfaces/context-data.interface';
 import { IVariables } from '../interfaces/variables.interface';
 import { Db } from 'mongodb';
+import { pagination } from '../lib/pagination';
 
 class ResolversOperationsService {
   
@@ -28,15 +29,24 @@ class ResolversOperationsService {
   }
 
   // List info
-  protected async list(collection: string, listElement: string) {
+  protected async list(collection: string, listElement: string, page: number = 1, itemsPage: number = 20) {
     try {
+      console.log(page, itemsPage);
+      const paginationData = await pagination(this.getDb(), collection, page, itemsPage);
       return {
+        info: {
+          page: paginationData.page,
+          pages: paginationData.pages,
+          itemsPage: paginationData.itemsPage,
+          total: paginationData.total
+        },
         status: true,
         message: `${ listElement } list loaded!`,
-        items: await findElement(this.getDb(), collection)
+        items: await findElement(this.getDb(), collection, {}, paginationData)
       };
     } catch (error) {
       return {
+        info: null,
         status: false,
         message: `${ listElement } list no loaded! ${error}`,
         items: null

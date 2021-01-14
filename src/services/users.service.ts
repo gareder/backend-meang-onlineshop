@@ -16,8 +16,11 @@ class UsersService extends ResolversOperationsService {
 
   // Users list
   async items() {
-    const result = await this.list(this.collection, 'users');
+    const page = this.getVariables().pagination?.page;
+    const itemsPage = this.getVariables().pagination?.itemsPage;
+    const result = await this.list(this.collection, 'users', page, itemsPage);
     return {
+      info: result.info,
       status: result.status,
       message: result.message,
       users: result.items
