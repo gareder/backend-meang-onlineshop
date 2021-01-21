@@ -151,6 +151,27 @@ class UsersService extends ResolversOperationsService {
       message: result.message
     };
   }
+
+  async block() {
+    const id = this.getVariables().id;
+    // Check ID is valid
+    if (!this.checkData(String(id) || '')) {
+      return {
+        status: false,
+        message: 'User ID has not been correctly specified',
+        genre: null
+      };
+    }
+    const result = await this.update(this.collection, { id }, { active: false }, 'user');
+    return {
+      status: result.status,
+      message: (result.status) ? 'Blocked successfully' : 'Not blocked successfully, please check'
+    };
+  }
+
+  private checkData(value: string) {
+    return (value === '' || value === undefined) ? false : true;
+  }
 }
 
 export default UsersService;

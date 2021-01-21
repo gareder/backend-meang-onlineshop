@@ -51,6 +51,6 @@ export const deleteOneElement = async(database: Db, collection: string, filter: 
   return await database.collection(collection).deleteOne(filter);
 };
 
-export const countElements = async(database: Db, collection: string) => {
-  return await database.collection(collection).countDocuments();
+export const countElements = async(database: Db, collection: string, filter: object = {}) => {
+  return await database.collection(collection).countDocuments(filter);
 };

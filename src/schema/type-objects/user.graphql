@@ -16,4 +16,5 @@ type User {
   birthday: String!
   # Role Client/Admin
   role: Role!
+  active: Boolean
 }

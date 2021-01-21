@@ -29,10 +29,11 @@ class ResolversOperationsService {
   }
 
   // List info
-  protected async list(collection: string, listElement: string, page: number = 1, itemsPage: number = 20) {
+  protected async list(collection: string, listElement: string, page: number = 1, itemsPage: number = 20,
+                      filter: object = { active: { $ne: false}}) {
     try {
       console.log(page, itemsPage);
-      const paginationData = await pagination(this.getDb(), collection, page, itemsPage);
+      const paginationData = await pagination(this.getDb(), collection, page, itemsPage, filter);
       return {
         info: {
           page: paginationData.page,
@@ -42,7 +43,7 @@ class ResolversOperationsService {
         },
         status: true,
         message: `${ listElement } list loaded!`,
-        items: await findElement(this.getDb(), collection, {}, paginationData)
+        items: await findElement(this.getDb(), collection, filter, paginationData)
       };
     } catch (error) {
       return {

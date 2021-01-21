@@ -10,4 +10,5 @@ input UserInput {
   birthday: String!
   # Role Client/Admin
   role: Role = CLIENT
+  active:  Boolean
 }
