@@ -8,6 +8,7 @@ import schema from './schema/index';
 import expressPlayground from 'graphql-playground-middleware-express';
 import Database from './lib/database';
 import { IContext } from './interfaces/context.interface';
+import chalk from 'chalk';
 
 
 // Env var config
@@ -47,7 +48,8 @@ async function init() {
   const httpServer = createServer(app);
   const PORT = process.env.PORT || 8080;
   httpServer.listen(PORT, () => {
-    console.log('Server on 8080');
+    console.log('=======SERVER CONNECTION=======');
+    console.log(`STATUS: ${chalk.greenBright('ONLINE ON 8080')}`);
   });
 
 }

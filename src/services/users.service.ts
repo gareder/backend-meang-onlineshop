@@ -4,6 +4,7 @@ import { findOneElement, assignDocumentId, insertOneElement } from '../lib/db-op
 import ResolversOperationsService from './resolvers-operations.service';
 import bcrypt from 'bcrypt';
 import JWT from '../lib/jwt';
+import MailService from './mail.service';
 
 
 class UsersService extends ResolversOperationsService {
@@ -152,8 +153,9 @@ class UsersService extends ResolversOperationsService {
     };
   }
 
-  async block() {
+  async unblock(unblock: boolean) {
     const id = this.getVariables().id;
+    const user = this.getVariables().user;
     // Check ID is valid
     if (!this.checkData(String(id) || '')) {
       return {
@@ -162,11 +164,42 @@ class UsersService extends ResolversOperationsService {
         genre: null
       };
     }
-    const result = await this.update(this.collection, { id }, { active: false }, 'user');
+    if (user?.password === '1234') {
+      return {
+        status: false,
+        message: `Account can't be activated 'cause you haven't changed the password`
+      };
+    }
+    let update = {active: unblock};
+    if (unblock) {
+      update = Object.assign({}, {active: true}, {birthday: user?.birthday, password: bcrypt.hashSync(user?.password, 10)});
+    }
+    console.log(update);
+    const result = await this.update(this.collection, { id }, update, 'user');
+    const action = (unblock) ? 'Unblocked' : 'Blocked';
     return {
       status: result.status,
-      message: (result.status) ? 'Blocked successfully' : 'Not blocked successfully, please check'
+      message: (result.status) ? `${action} successfully` : `Not ${action.toLowerCase()} successfully, please check`
     };
+  }
+
+  async active() {
+    const id = this.getVariables().user?.id;
+    const email = this.getVariables().user?.email || '';
+    if (email === undefined || email === '') {
+      return {
+        status: false,
+        message: 'Email must have a value different than undefined or empty'
+      };
+    }
+    const token = new JWT().sign({user: {id, email}}, EXPIRETIME.M20);
+    const html = `To active your account please <a href="${process.env.CLIENT_URL}/#/active/${token}">Click here</a>`;
+    const mail = {
+      subject: 'Activate Account',
+      to: email,
+      html
+    };
+    return new MailService().send(mail);
   }
 
   private checkData(value: string) {
