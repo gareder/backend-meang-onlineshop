@@ -1,4 +1,4 @@
-import { COLLECTIONS, EXPIRETIME, MESSAGES } from '../config/constants';
+import { COLLECTIONS, EXPIRETIME, MESSAGES, ACTIVE_VALUES_FILTER } from '../config/constants';
 import { IContextData } from '../interfaces/context-data.interface';
 import { findOneElement, assignDocumentId, insertOneElement } from '../lib/db-operations';
 import ResolversOperationsService from './resolvers-operations.service';
@@ -16,10 +16,17 @@ class UsersService extends ResolversOperationsService {
   }
 
   // Users list
-  async items() {
+  async items(active: string = ACTIVE_VALUES_FILTER.ACTIVE) {
+    console.log('Service', active);
+    let filter: object = {active: {$ne: false}};
+    if (active === ACTIVE_VALUES_FILTER.ALL) {
+      filter = {};
+    } else if (active === ACTIVE_VALUES_FILTER.INACTIVE) {
+      filter = {active: false}; // filter = {active: {$nq: false}};
+    }
     const page = this.getVariables().pagination?.page;
     const itemsPage = this.getVariables().pagination?.itemsPage;
-    const result = await this.list(this.collection, 'users', page, itemsPage);
+    const result = await this.list(this.collection, 'users', page, itemsPage, filter);
     return {
       info: result.info,
       status: result.status,
@@ -153,7 +160,7 @@ class UsersService extends ResolversOperationsService {
     };
   }
 
-  async unblock(unblock: boolean) {
+  async unblock(unblock: boolean, admin: boolean) {
     const id = this.getVariables().id;
     const user = this.getVariables().user;
     // Check ID is valid
@@ -171,7 +178,8 @@ class UsersService extends ResolversOperationsService {
       };
     }
     let update = {active: unblock};
-    if (unblock) {
+    if (unblock && !admin) {
+      console.log('Im user changing password');
       update = Object.assign({}, {active: true}, {birthday: user?.birthday, password: bcrypt.hashSync(user?.password, 10)});
     }
     console.log(update);

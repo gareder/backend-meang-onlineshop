@@ -1,7 +1,7 @@
 # Array Type Definitions
 type Query {
   # List of registered users in the DB (Clients/Admins)
-  users(page: Int = 1, itemsPage: Int = 20): ResultUsers
+  users(page: Int = 1, itemsPage: Int = 20, active: ActiveFilterEnum = ACTIVE): ResultUsers
   # Login
   login(email: String!, password: String!): ResultLogin
   # Token auth
