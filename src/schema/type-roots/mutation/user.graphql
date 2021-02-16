@@ -1,0 +1,8 @@
+type Mutation {
+  # Users
+  register(user: UserInput!): ResultUser
+  updateUser(user: UserInput!): ResultUser
+  deleteUser(id: ID!): ResultUser
+  # admin = It's to specify where we're sending the request to block/unblock the user
+  blockUser(id: ID!, unblock: Boolean = false, admin: Boolean = false): ResultUser
+}

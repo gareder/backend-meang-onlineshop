@@ -1,0 +1,4 @@
+type Rating {
+  count: Int
+  value: Float
+}

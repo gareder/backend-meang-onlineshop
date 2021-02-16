@@ -1,0 +1,6 @@
+type Query {
+  # List of tags
+  tags(page: Int = 1, itemsPage: Int = 20): ResultTag
+  # Selected tag
+  tag(id: ID!): ResultTag
+}

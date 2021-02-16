@@ -1,0 +1,6 @@
+type Query {
+  # Genres list
+  genres(page: Int = 1, itemsPage: Int = 20): ResultGenre
+  # Selected genre item
+  genre(id: ID!): ResultGenre
+}

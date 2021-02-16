@@ -54,3 +54,13 @@ export const deleteOneElement = async(database: Db, collection: string, filter: 
 export const countElements = async(database: Db, collection: string, filter: object = {}) => {
   return await database.collection(collection).countDocuments(filter);
 };
+
+export const randomItems = async(database: Db, collection: string, filter: object = {}, items: number = 10): Promise<Array<object>> => {
+  return new Promise(async(resolve) => {
+    const pipeLine = [
+      { $match: filter },
+      { $sample: { size: items }}
+    ];
+    resolve(await database.collection(collection).aggregate(pipeLine).toArray());
+  });
+};
