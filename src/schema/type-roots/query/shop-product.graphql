@@ -1,8 +1,8 @@
 type Query {
   # Product list
   shopProducts(page: Int = 1, itemsPage: Int = 20, active: ActiveFilterEnum = ACTIVE): ResultShopProduct
-  # plaform = to specify the selected platform
-  shopProductsPlatforms(page: Int = 1, itemsPage: Int = 20, active: ActiveFilterEnum = ACTIVE, platform: ID!,
+  # plaform = to specify the selected platforms
+  shopProductsPlatforms(page: Int = 1, itemsPage: Int = 20, active: ActiveFilterEnum = ACTIVE, platform: [ID!]!,
                         random: Boolean = false): ResultShopProduct
   # Top price to conside it an offer, lastUnits flag to set there are few units left.
   shopProductsOffersLast(page: Int = 1, itemsPage: Int = 20, active: ActiveFilterEnum = ACTIVE, random: Boolean = false,
