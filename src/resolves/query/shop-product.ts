@@ -29,6 +29,11 @@ const resolversShopProductsQuery: IResolvers = {
       }
       console.log(otherFilters);
       return new ShopProductsService(_, { pagination: { page, itemsPage, active, topPrice, lastUnits} }, context).items(active, ['-1'], random, otherFilters);
+    },
+
+    shopProductDetails(_,{ id }, context) {
+      console.log(id, typeof id);
+      return new ShopProductsService(_, { id }, context).details();
     }
   }
 };

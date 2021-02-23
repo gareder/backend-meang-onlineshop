@@ -4,6 +4,6 @@ type ResultShopProduct implements Result {
   message: String!
   # Selected product
   shopProduct: ShopProduct
-  # Product list
+  # Products list
   shopProducts: [ShopProduct!]
 }
