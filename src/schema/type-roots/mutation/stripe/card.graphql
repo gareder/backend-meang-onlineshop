@@ -1,0 +1,8 @@
+type Mutation {
+  # Create the token for the CC/DC payments
+  createCardToken(card: CardInput): ResultStripeCard
+  # Creating the card associated to the cust
+  createCard(customer: ID!, tokenCard: String!): ResultStripeCard
+  updateCard(customer: ID!, card: ID!, details: CardDetailsInput!): ResultStripeCard
+  deleteCard(customer: ID!, card: ID!): ResultStripeCard
+}

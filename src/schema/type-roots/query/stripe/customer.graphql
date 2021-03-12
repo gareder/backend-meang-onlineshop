@@ -1,0 +1,7 @@
+type Query {
+  # To specify the 1st position after the selected user (startingAfter)
+  # To show the users before (endingBefore)
+  customers(limit: Int = 5, startingAfter: ID = "", endingBefore: ID = ""): ResultStripeCustomer
+  # Stripe cust id
+  customer(id: ID!): ResultStripeCustomer
+}

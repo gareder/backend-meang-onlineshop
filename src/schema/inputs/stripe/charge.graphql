@@ -1,0 +1,8 @@
+input ChargeInput {
+  token: String
+  # Amount to pay in string, later its converted to zero decimal integer
+  amount: String!
+  description: String!
+  customer: ID!
+  currency: CurrencyEnum = EUR
+}
