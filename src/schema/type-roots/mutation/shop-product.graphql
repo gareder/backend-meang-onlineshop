@@ -1,0 +1,4 @@
+type Mutation {
+  # Updating the stock (1 or more products)
+  updateStock(update: [ShopProductStockInput!]!): Boolean
+}

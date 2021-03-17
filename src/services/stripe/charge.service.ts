@@ -3,6 +3,7 @@ import StripeApi, { STRIPE_OBJECTS } from '../../lib/stripe-api';
 import { STRIPE_ACTIONS } from '../../lib/stripe-api';
 import StripeCustomerService from './customer.service';
 import StripeCardService from './card.service';
+import { IStripeCharge } from '../../interfaces/stripe/charge.interface';
 
 class StripeChargeService extends StripeApi {
   
@@ -50,7 +51,23 @@ class StripeChargeService extends StripeApi {
     } catch (error) {
       return this.getError(error);
     }
-    
+  }
+
+  async listByCustomer(customer: string, limit: number, startingAfter: string, endingBefore: string) {
+    try {
+      const pagination = this.getPagination(startingAfter, endingBefore);
+      const charges: { has_more: boolean, data: IStripeCharge } = await this.execute(STRIPE_OBJECTS.CHARGES, STRIPE_ACTIONS.LIST,
+        { customer, limit, ...pagination }
+      );
+      return {
+        status: true,
+        message: 'Customer charges successfully loaded',
+        hasMore: charges.has_more,
+        charges: charges.data
+      };
+    } catch (error) {
+      return this.getError(error);
+    }
   }
 
 }

@@ -1,6 +1,7 @@
 import ResolversOperationsService from './resolvers-operations.service';
 import { COLLECTIONS, ACTIVE_VALUES_FILTER } from '../config/constants';
-import { randomItems } from '../lib/db-operations';
+import { randomItems, manageStockUpdate } from '../lib/db-operations';
+import { IStock } from '../interfaces/stock.interface';
 
 
 class ShopProductsService extends ResolversOperationsService {
@@ -54,6 +55,19 @@ class ShopProductsService extends ResolversOperationsService {
       message: result.message,
       shopProduct: result.item
     };
+  }
+
+  async updateStock(updateList: Array<IStock>) {
+    try {
+      updateList.map(async(item: IStock) => {
+        console.log(item);
+        await manageStockUpdate(this.getDb(), COLLECTIONS.SHOP_PRODUCT, { id: +item.id }, { stock: item.increment });
+      });
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
   }
 }
 

@@ -17,4 +17,5 @@ type User {
   # Role Client/Admin
   role: Role!
   active: Boolean
+  stripeCustomer: String
 }

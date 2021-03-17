@@ -3,7 +3,7 @@ input CardInput {
   expMonth: Int!
   expYear: Int!
   cvc: String!
-  currency: CurrencyEnum = EUR
+  currency: CurrencyEnum = USD
 }
 
 input CardDetailsInput {

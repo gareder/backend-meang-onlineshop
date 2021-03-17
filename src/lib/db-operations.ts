@@ -64,3 +64,8 @@ export const randomItems = async(database: Db, collection: string, filter: objec
     resolve(await database.collection(collection).aggregate(pipeLine).toArray());
   });
 };
+
+// Stock management
+export const manageStockUpdate = async(database: Db, collection: string, filter: object, updateObject: object) => {
+  return await database.collection(collection).updateOne(filter, { $inc: updateObject });
+};

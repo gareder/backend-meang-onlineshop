@@ -1,0 +1,8 @@
+input ShopProductStockInput {
+  # Product ID
+  id: ID!
+  # Flag to increase/decrease the stock. + => increase. - => decrease
+  # IE: 40 items / increase += 40 => 80
+  # IE: 40 items / decrease -= 30 => 10
+  increment: Int!
+}

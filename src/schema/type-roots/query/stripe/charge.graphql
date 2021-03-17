@@ -1,0 +1,4 @@
+type Query {
+  # Charges info by customer
+  chargesByCustomer(customer: ID!, limit: Int = 5, startingAfter: ID = "", endingBefore: ID = ""): ResultStripeCharge
+}

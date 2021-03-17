@@ -4,5 +4,5 @@ input ChargeInput {
   amount: String!
   description: String!
   customer: ID!
-  currency: CurrencyEnum = EUR
+  currency: CurrencyEnum = USD
 }
