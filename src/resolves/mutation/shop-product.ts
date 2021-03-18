@@ -4,8 +4,8 @@ import ShopProductsService from '../../services/shop-product.service';
 
 const resolversShopProductMutation: IResolvers = {
   Mutation: { 
-    updateStock(_, { update }, { db }) {
-      return new ShopProductsService(_, {}, { db }).updateStock(update);
+    updateStock(_, { update }, { db, pubsub }) {
+      return new ShopProductsService(_, {}, { db }).updateStock(update, pubsub);
     }
     
   }

@@ -4,6 +4,10 @@ import { STRIPE_ACTIONS } from '../../lib/stripe-api';
 import StripeCustomerService from './customer.service';
 import StripeCardService from './card.service';
 import { IStripeCharge } from '../../interfaces/stripe/charge.interface';
+import { IStock } from '../../interfaces/stock.interface';
+import { PubSub } from 'apollo-server-express';
+import { Db } from 'mongodb';
+import ShopProductsService from '../shop-product.service';
 
 class StripeChargeService extends StripeApi {
   
@@ -12,7 +16,7 @@ class StripeChargeService extends StripeApi {
     return new StripeCustomerService().get(customer);
   }
 
-  async order(payment: IPayment) {
+  async order(payment: IPayment, stockChange: Array<IStock>, db: Db, pubsub: PubSub) {
     const userData = await this.getClient(payment.customer);
     if (userData && userData.status) {
       console.log('CLIENT FOUND');
@@ -42,6 +46,7 @@ class StripeChargeService extends StripeApi {
     payment.amount *= 100;
     // Payment
     try {
+      new ShopProductsService({}, {}, { db }).updateStock(stockChange, pubsub);
       result = await this.execute(STRIPE_OBJECTS.CHARGES, STRIPE_ACTIONS.CREATE, payment);
       return {
         status: true,

@@ -4,8 +4,8 @@ import StripeChargeService from '../../../services/stripe/charge.service';
 
 const resolversStripeChargerMutation: IResolvers = {
   Mutation: {
-    async chargeOrder(_, { payment }) {
-      return new StripeChargeService().order(payment);
+    async chargeOrder(_, { payment, stockChange }, { db, pubsub }) {
+      return new StripeChargeService().order(payment, stockChange, db, pubsub);
     }
   },
 };

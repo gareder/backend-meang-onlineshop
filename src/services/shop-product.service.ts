@@ -1,7 +1,8 @@
 import ResolversOperationsService from './resolvers-operations.service';
-import { COLLECTIONS, ACTIVE_VALUES_FILTER } from '../config/constants';
-import { randomItems, manageStockUpdate } from '../lib/db-operations';
+import { COLLECTIONS, ACTIVE_VALUES_FILTER, SUBSCRIPTIONS_EVENT } from '../config/constants';
+import { randomItems, manageStockUpdate, findOneElement } from '../lib/db-operations';
 import { IStock } from '../interfaces/stock.interface';
+import { PubSub } from 'graphql-subscriptions';
 
 
 class ShopProductsService extends ResolversOperationsService {
@@ -57,11 +58,17 @@ class ShopProductsService extends ResolversOperationsService {
     };
   }
 
-  async updateStock(updateList: Array<IStock>) {
+  async updateStock(updateList: Array<IStock>, pubsub: PubSub) {
     try {
       updateList.map(async(item: IStock) => {
         console.log(item);
+        const itemDetails = await findOneElement(this.getDb(), COLLECTIONS.SHOP_PRODUCT, { id: +item.id});
+        if (item.increment < 0 && ((item.increment + itemDetails.stock) < 0)) {
+          item.increment = -itemDetails.stock;
+        }
         await manageStockUpdate(this.getDb(), COLLECTIONS.SHOP_PRODUCT, { id: +item.id }, { stock: item.increment });
+        itemDetails.stock += item.increment;
+        pubsub.publish(SUBSCRIPTIONS_EVENT.UPDATE_STOCK_PRODUCT, { selectProductStockUpdate: itemDetails});
       });
       return true;
     } catch (error) {
